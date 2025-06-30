@@ -7,18 +7,12 @@ _Copy this design recipe template to test-drive a plain-text Flask route._
 _Include the HTTP method, the path, and any query or body parameters._
 
 ```
-# EXAMPLE
+# Sort Names Route
+POST /sort-names
 
-# Home route
-GET /home
+# Add names route
+GET /names
 
-# Waving route
-GET /wave?name=
-
-# Submit message route
-POST /submit
-  name: string
-  message: string
 ```
 
 ## 2. Create Examples as Tests
@@ -30,40 +24,21 @@ _Remember to try out different parameter values._
 _Include the status code and the response body._
 
 ```python
-# EXAMPLE
 
-# GET /home
-#  Expected response (200 OK):
-"""
-This is my home page!
-"""
-
-# GET /wave?name=Leo
-#  Expected response (200 OK):
-"""
-I am waving at Leo
-"""
-
-# GET /wave
-#  Expected response (200 OK):
-"""
-I am waving at no one!
-"""
-
-# POST /submit
+# POST /sort-names
 #  Parameters:
-#    name: Leo
-#    message: Hello world
+#    names=Joe,Alice,Zoe,Julia,Kieran
 #  Expected response (200 OK):
 """
-Thanks Leo, you sent this message: "Hello world"
+Alice,Joe,Julia,Kieran,Zoe
 """
 
-# POST /submit
-#  Parameters: none
-#  Expected response (400 Bad Request):
+# GET /names
+#  Parameters:
+#    name=Eddie, Leo
+#  Expected response (200 OK):
 """
-Please provide a name and a message
+Alice, Eddie, Julia, Karim, Leo
 """
 ```
 
@@ -75,24 +50,26 @@ Here's an example for you to start with:
 
 ```python
 """
-GET /home
+POST /sort-names
+  Parameters:
+    names=Joe,Alice,Zoe,Julia,Kieran
   Expected response (200 OK):
-  "This is my home page!"
+  Alice,Joe,Julia,Kieran,Zoe
 """
-def test_get_home(web_client):
-    response = web_client.get('/home')
+def test_sort_names(web_client):
+    response = web_client.post('/sort-names', data={'names': 'Joe,Alice,Zoe,Julia,Kieran'})
     assert response.status_code == 200
-    assert response.data.decode('utf-8') == 'This is my home page!'
+    assert response.data.decode('utf-8') == 'Alice,Joe,Julia,Kieran,Zoe'
 
 """
-POST /submit
+ GET /names
   Parameters:
-    name: Leo
-    message: Hello world
+    name=Eddie,Leo
   Expected response (200 OK):
-  "Thanks Leo, you sent this message: "Hello world""
+  Alice, Eddie, Julia, Karim, Leo
 """
-def test_post_submit(web_client):
-    response = web_client.post('/submit', data={'name': 'Leo', 'message': 'Hello world'})
+def test_add_name(web_client):
+    response = web_client.get('/names?add=Eddie,Leo')
     assert response.status_code == 200
-    assert response.data.decode('utf-8') =
+    assert response.data.decode('utf-8') == 'Alice, Eddie, Julia, Karim, Leo'
+```

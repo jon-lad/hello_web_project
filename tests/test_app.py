@@ -29,3 +29,27 @@ def test_post_count_vowels_mercurial(web_client):
     response = web_client.post('/count_vowels', data={'text': 'mercurial'})
     assert response.status_code == 200
     assert response.data.decode('utf-8') == 'There are 4 vowels in "mercurial"'
+
+"""
+POST /sort-names
+  Parameters:
+    names=Joe,Alice,Zoe,Julia,Kieran
+  Expected response (200 OK):
+  Alice,Joe,Julia,Kieran,Zoe
+"""
+def test_sort_names(web_client):
+    response = web_client.post('/sort-names', data={'names': 'Joe,Alice,Zoe,Julia,Kieran'})
+    assert response.status_code == 200
+    assert response.data.decode('utf-8') == 'Alice,Joe,Julia,Kieran,Zoe'
+
+"""
+ GET /names
+  Parameters:
+    name=Eddie,Leo
+  Expected response (200 OK):
+  Alice, Eddie, Julia, Karim, Leo
+"""
+def test_add_name(web_client):
+    response = web_client.get('/names?add=Eddie,Leo')
+    assert response.status_code == 200
+    assert response.data.decode('utf-8') == 'Alice, Eddie, Julia, Karim, Leo'

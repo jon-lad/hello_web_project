@@ -13,6 +13,18 @@ def count_vowels():
     vowels_in_text = [char for char in text if char in vowels]
     return f'There are {len(vowels_in_text)} vowels in "{text}"'
 
+@app.route('/sort-names', methods=["POST"])
+def sort_names():
+    names = request.form['names'].split(',')
+    return ",".join(sorted(names))
+
+@app.route('/names', methods=["GET"])
+def add_name():
+    names = request.args['add'].split(',')
+    name_list = ['Julia', 'Alice', 'Karim'] + names
+    return ", ".join(sorted(name_list))
+
+
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
